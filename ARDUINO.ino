@@ -25,6 +25,15 @@ const int humiditySensorPin7 = A6;
 const int lm35SensorPin = A7;
 
 
+float t_humedadMin = 0;
+float t_humedadMax = 0;
+String t_horaEncendido = "";
+String t_horaApagado = "";
+float t_fertilizadoPeriodo = 0;
+bool t_fertilizadoReinicio = false;
+bool t_fertilizadoRecarga = false;
+bool t_lecturaForzada = false;
+String t_horaActual = "";
 
 float humidity_sensor1 = 0;
 float humidity_sensor2 = 0;
@@ -108,7 +117,14 @@ void loop() {
   
   if(Serial.available()){
     String message = Serial.readStringUntil('\n');
-    Separar(message);
+    separar(message);
+    if(comparar_horas(t_horaEncendido,t_horaActual){
+      digitalWrite(relay6Pin,LOW);
+    }
+    if(comparar_horas(t_horaApagado, t_horaActual)){
+      digitalWrite(relay6Pin,LOW);
+    }
+    
    // if(message.equals("rele_one_off")){digitalWrite(relay1Pin, HIGH);}
    // if(message.equals("rele_two_on")){digitalWrite(relay1Pin, LOW);}
    // if(message.equals("rele_two_off")){digitalWrite(relay1Pin, HIGH);}
@@ -307,13 +323,13 @@ void ManualReading() {
 void StartIrrigation(){
   digitalWrite(relay2Pin, LOW);
   irrigationActive = true;
-  interval = 30000;
+  interval = 30000; //30Segundos
  
 }
 void StopIrrigation(){
   digitalWrite(relay2Pin, HIGH);
-  interval = 1800000;
-  needPurge = true;
+  interval = 1800000; //30 minutos
+  //needPurge = true;
   irrigationActive = false;
   //digitalWrite(relay3Pin, LOW);
 }
@@ -321,7 +337,7 @@ float getTemperature(){
   int value = analogRead(lm35SensorPin);
   float volts = (value*5) / 1024.0;
   float celsius = (volts * 100) - 32;
-  return value;
+  return celsius;
 }
 
 
@@ -342,6 +358,64 @@ float getWaterLevel(){
   duration = pulseIn(water_echoPin,HIGH);
   return duration;
 }
-void Separar(String m){
+void separar(String texto){
+  // Encontrar las comas y extraer los números
+  int startIndex = 0;
+  int commaIndex = texto.indexOf(',');
+
+  // Almacenar el primer número
+  t_humedadMin = texto.substring(startIndex, commaIndex).toInt();
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  t_humedadMax = texto.substring(startIndex, commaIndex).toInt();
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  t_horaEncendido = texto.substring(startIndex, commaIndex);
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  t_horaApagado = texto.substring(startIndex, commaIndex);
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  t_horaActual = texto.substring(startIndex, commaIndex);
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  t_fertilizadoPeriodo = texto.substring(startIndex, commaIndex).toInt();
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  t_fertilizadoReinicio = (texto.substring(startIndex, commaIndex)) == "1";
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+  
+  t_fertilizadoRecarga = (texto.substring(startIndex, commaIndex).toFloat()) == "1";
+  startIndex = commaIndex + 1;
+  commaIndex = texto.indexOf(',', startIndex);
+
+  // Almacenar el ultimo numero
+  t_lecturaForzada = (texto.substring(startIndex)) == "1";
+}
+boolean comparar_horas(String recibida, String actual){
+
+  //Formato HH:MM
+  int actualHora = actual.substring(0, 2).toInt();
+  int actualMinutos = actual.substring(3, 5).toInt();
+  
+  //FORMATO HH:MM:SS
+  int recibidaHora = recibida.substring(0, 2).toInt();
+  int recibidaMinutos = recibida.substring(3, 5).toInt();
+
+  // Compara horas y minutos
+  if (actualHour > recibidaHour) {
+    return true;
+  } else if (actualHour == recibidaHour && actualMinute >= recibidaMinute) {
+    return true;
+  }
+  return false;
+}
   
 }
