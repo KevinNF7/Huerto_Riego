@@ -4,12 +4,16 @@
 
 Adafruit_INA219 ina219;
 // Pines del relay y sensores
-const int relay1Pin = 43;
-const int relay2Pin = 41;
-const int relay3Pin = 39;
-const int relay4Pin = 37;
-const int relay5Pin = 35;
-const int relay6Pin = 33;
+const int relay1Pin = 2;
+const int relay2Pin = 3;
+const int relay3Pin = 4;
+const int relay4Pin = 5;
+const int relay5Pin = 6;
+const int relay6Pin = 7;
+const int water_triggerPin = 8;
+const int water_echoPin = 9;
+
+const int servoPin = 11;
 
 const int humiditySensorPin1 = A0;
 const int humiditySensorPin2 = A1;
@@ -19,6 +23,7 @@ const int humiditySensorPin5 = A4;
 const int humiditySensorPin6 = A5;
 const int humiditySensorPin7 = A6;
 const int lm35SensorPin = A7;
+
 
 
 float humidity_sensor1 = 0;
@@ -36,24 +41,25 @@ float water_level = 0;
 float fertilizer = 0;
 float temperature = 0;
 
-const int water_triggerPin = 7;
-const int water_echoPin = 6;
 
 float humidity_temp = 0;
 
 float min_humidity = 716;
 float max_humidity = 380;
+
 unsigned long previousMillis = 0;  // Almacena el tiempo en que se activó la última acción
-unsigned long interval = 10000; // Intervalo de 10 minutos (600,000 ms)
+unsigned long interval = 1800000; // Intervalo de 30 minutos en ms
+
 unsigned long manualPreviousMillis = 0; // Almacena el tiempo para la medición manual
 bool manualMeasurementActive = false;
+
 bool irrigationActive = false;
 unsigned long riegoStartMillis = 0;
 const long INAinterval = 900000;
 unsigned long previousINA = 0;
 bool initial = true;
 //long initial_interval = 10000;
-bool needPurge = false;
+bool needFertilizer = false;
 unsigned long purgeMillis;
 
 enum State {
@@ -66,7 +72,7 @@ enum State {
   MANUAL_RELAY_OFF,
   IRRIGATION_ON,
   IRRIGATION_READ_SENSOR,
-  PURGE
+  FERTILIZER
 };
 
 
