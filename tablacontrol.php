@@ -1,5 +1,5 @@
 <?php
-// Verificar si hay una solicitud POST con el parámetro 'control_id' (podrías cambiar 'control_id' si no es necesario)
+    //Codigo para evitar almacenamiento en memoria cache
     header('Cache-Control: no-cache, must-revalidate');
     // Detalles de la base de datos
     $dbHost     = "127.0.0.1";
