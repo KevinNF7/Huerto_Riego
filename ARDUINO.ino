@@ -4,16 +4,16 @@
 
 Adafruit_INA219 ina219;
 // Pines del relay y sensores
-const int relay1Pin = 2;
-const int relay2Pin = 3;
-const int relay3Pin = 4;
-const int relay4Pin = 5;
-const int relay5Pin = 6;
-const int relay6Pin = 7;
-const int water_triggerPin = 8;
-const int water_echoPin = 9;
+const int relay1Pin = 2; //Sensores
+const int relay2Pin = 3; //Solenoide Riego
+const int relay3Pin = 4; //Solenoide Fertilizado
+const int relay4Pin = 5; //Fertilizado Mezcla
+const int relay5Pin = 6; //Fertilizado Bomba
+const int relay6Pin = 7; //Luz
+const int water_triggerPin = 8; //Nivel de agua
+const int water_echoPin = 9; //Nivel de agua
 
-const int servoPin = 11;
+const int servoPin = 11; //Servomotor fertilizado
 
 const int humiditySensorPin1 = A0;
 const int humiditySensorPin2 = A1;
@@ -50,6 +50,9 @@ float max_humidity = 380;
 unsigned long previousMillis = 0;  // Almacena el tiempo en que se activó la última acción
 unsigned long interval = 1800000; // Intervalo de 30 minutos en ms
 
+unsigned long servoMillis = 0;
+unsigned long gearMillis = 0;
+unsigned long pumpMillis = 0;
 unsigned long manualPreviousMillis = 0; // Almacena el tiempo para la medición manual
 bool manualMeasurementActive = false;
 
@@ -58,6 +61,7 @@ unsigned long riegoStartMillis = 0;
 const long INAinterval = 900000;
 unsigned long previousINA = 0;
 bool initial = true;
+bool needServo = false;
 //long initial_interval = 10000;
 bool needFertilizer = false;
 unsigned long purgeMillis;
@@ -72,7 +76,8 @@ enum State {
   MANUAL_RELAY_OFF,
   IRRIGATION_ON,
   IRRIGATION_READ_SENSOR,
-  FERTILIZER
+  FERTILIZER,
+  FERTILIZER_PUMP
 };
 
 
@@ -103,7 +108,7 @@ void loop() {
   
   if(Serial.available()){
     String message = Serial.readStringUntil('\n');
-    Serial.print(message + "NANO");
+    Separar(message);
    // if(message.equals("rele_one_off")){digitalWrite(relay1Pin, HIGH);}
    // if(message.equals("rele_two_on")){digitalWrite(relay1Pin, LOW);}
    // if(message.equals("rele_two_off")){digitalWrite(relay1Pin, HIGH);}
@@ -206,13 +211,7 @@ void loop() {
         }
       }
       break;
-    case PURGE:
-      if(currentMillis - purgeMillis >= 60000){
-        //digitalWrite(relay3Pin,HIGH);
-        currentState = WAITING;
-        needPurge = false;
-      }
-      break;
+  
 
     case MANUAL_RELAY_ON:
       if (currentMillis - manualPreviousMillis >= 1000) {
@@ -257,6 +256,38 @@ void loop() {
       manualMeasurementActive = false;
       currentState = WAITING;  // Vuelve al estado de espera
       break;
+
+    case FERTILIZER:
+      digitalWrite(relay4Pin,HIGH);
+      servoMillis = currentMillis;
+      gearMillis = currentMillis;
+            //El servo se momera 1 grado cada 0.5 segundos
+      if (currentMillis - servoMillis >= 500 && currentAngle < targetAngle && needServo) {
+        currentAngle++;  // Incrementar el ángulo en 1 grado
+        myServo.write(currentAngle);
+        if (currentAngle >= targetAngle) {
+          if(currentAngle >= 128){
+            currentAngle = 0;  // Reiniciar el ángulo para el siguiente ciclo de 14 días  
+            needServo = false;
+          }else{
+            currentAngle += 32;
+            needServo = false;
+            
+          }
+        }
+      }
+      if(currentMillis - gearMillis >= 90000){
+        currentState = FERTILIZER_PUMP;
+      }
+      
+    currentState = FERTILIZER_PUMP;
+    case FERTILIZER_PUMP:
+      digitalWrite(relay4Pin, LOW);
+      digitalWrite(relay5Pin, HIGH);
+      
+    // Si el servo ha alcanzado el ángulo objetivo, reiniciar el conteo para los 14 días
+      
+    }
   }
 
 
@@ -310,4 +341,7 @@ float getWaterLevel(){
 
   duration = pulseIn(water_echoPin,HIGH);
   return duration;
+}
+void Separar(String m){
+  
 }
