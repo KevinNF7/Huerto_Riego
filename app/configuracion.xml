@@ -1,1 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+
+    <ImageView
+        android:id="@+id/imgFondoConfiguracion"
+        android:layout_width="411dp"
+        android:layout_height="729dp"
+        android:layout_marginTop="1dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/verde" />
+
+    <ImageView
+        android:id="@+id/imgFondoConfiguracionFertilizado"
+        android:layout_width="157dp"
+        android:layout_height="201dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintHorizontal_bias="0.062"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintVertical_bias="0.744"
+        app:srcCompat="@mipmap/verde2" />
+
+    <EditText
+        android:id="@+id/etHumedadMinima"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.264"
+        app:layout_constraintStart_toEndOf="@+id/twHumedadMinima"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.102" />
+
+    <EditText
+        android:id="@+id/etHumedadMaxima"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintStart_toEndOf="@+id/twHumedadMaxima"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.205" />
+
+    <EditText
+        android:id="@+id/etHoraEncendido"
+        android:layout_width="172dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="text"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.673"
+        app:layout_constraintStart_toEndOf="@+id/twHoraApagado"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.305" />
+
+    <EditText
+        android:id="@+id/etHoraApagado"
+        android:layout_width="172dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.673"
+        app:layout_constraintStart_toEndOf="@+id/twHoraEncendido"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.408" />
+
+    <TextView
+        android:id="@+id/twHumedadMinima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_minima"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <TextView
+        android:id="@+id/twHumedadMaxima"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:text="@string/tw_humedad_maxima"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/twHoraEncendido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_hora_encendido"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.162"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <TextView
+        android:id="@+id/twHoraApagado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_hora_apagado"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.202"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <Button
+        android:id="@+id/btnRecarga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:text="@string/btn_recarga"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintVertical_bias="0.45" />
+
+    <Button
+        android:id="@+id/btnModificar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:text="@string/btn_modificar"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintHorizontal_bias="0.824"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintVertical_bias="0.609" />
+
+    <Button
+        android:id="@+id/btnReinicio"
+        android:layout_width="101dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#FF0000"
+        android:text="@string/btn_reinicio"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintVertical_bias="0.895" />
+
+    <Button
+        android:id="@+id/btnCerrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:text="@string/btn_cerrar"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintVertical_bias="0.977" />
+
+    <TextView
+        android:id="@+id/twFertilizadoConfiguracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_fertilizado_configuracion"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracionFertilizado"
+        app:layout_constraintVertical_bias="0.087" />
+
+    <Button
+        android:id="@+id/btnLuz"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:backgroundTint="#ffe033"
+        android:text="@string/tw_configuracion_luz"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintHorizontal_bias="0.815"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoConfiguracion"
+        app:layout_constraintVertical_bias="0.791" />
+
+    <TextView
+        android:id="@+id/twPeriodo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_configuracion_periodo"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.353"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etPeriodo"
+        android:layout_width="172dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.673"
+        app:layout_constraintStart_toEndOf="@+id/twHoraEncendido"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.509" />
+
+    <TextView
+        android:id="@+id/twPorcentaje1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Porcentaje"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toEndOf="@+id/etHumedadMinima"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.125" />
+
+    <TextView
+        android:id="@+id/twPorcentaje2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Porcentaje"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.413"
+        app:layout_constraintStart_toEndOf="@+id/etHumedadMaxima"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.225" />
+</androidx.constraintlayout.widget.ConstraintLayout>
