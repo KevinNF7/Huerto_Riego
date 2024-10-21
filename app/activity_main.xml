@@ -1,0 +1,469 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/imgFondoVerdeClaro"
+        android:layout_width="428dp"
+        android:layout_height="400dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgFondoTitulo"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@mipmap/verde" />
+
+    <ImageView
+        android:id="@+id/imgFondoTitulo"
+        android:layout_width="432dp"
+        android:layout_height="105dp"
+        android:layout_marginBottom="626dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/images" />
+
+    <ImageView
+        android:id="@+id/imgTomates"
+        android:layout_width="413dp"
+        android:layout_height="270dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintVertical_bias="0.555"
+        app:srcCompat="@mipmap/tomate" />
+
+    <ImageView
+        android:id="@+id/imgFondoDatosHumedad"
+        android:layout_width="155dp"
+        android:layout_height="279dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.062"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoTitulo"
+        app:layout_constraintVertical_bias="0.599"
+        app:srcCompat="@mipmap/verde2" />
+
+    <ImageView
+        android:id="@+id/imgFondoDatosVarios"
+        android:layout_width="170dp"
+        android:layout_height="210dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.936"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoTitulo"
+        app:layout_constraintVertical_bias="0.457"
+        app:srcCompat="@mipmap/verde2" />
+
+    <TextView
+        android:id="@+id/tw_App_Control"
+        android:layout_width="324dp"
+        android:layout_height="70dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:text="App de Control"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoTitulo" />
+
+    <Button
+        android:id="@+id/btn_actualizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:backgroundTint="#FF0000"
+        android:text="@string/btn_actualizar"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.893"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintTop_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.194" />
+
+    <Button
+        android:id="@+id/btn_configuracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:text="@string/btn_configuracion"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.863"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toBottomOf="@+id/btn_actualizar"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <TextView
+        android:id="@+id/tw_humedad1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_1_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.06" />
+
+    <TextView
+        android:id="@+id/tw_humedad2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_2_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/tw_humedad3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_3_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.34" />
+
+    <TextView
+        android:id="@+id/tw_humedad4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_4_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.48" />
+
+    <TextView
+        android:id="@+id/tw_humedad5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_5_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.62" />
+
+    <TextView
+        android:id="@+id/tw_humedad6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_6_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.76" />
+
+    <TextView
+        android:id="@+id/tw_humedad7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_7_texto"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <TextView
+        android:id="@+id/tw_humedad_1_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.06" />
+
+    <TextView
+        android:id="@+id/tw_humedad_2_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="200"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/tw_humedad_3_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="300"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.34" />
+
+    <TextView
+        android:id="@+id/tw_humedad_4_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="400"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.48" />
+
+    <TextView
+        android:id="@+id/tw_humedad_5_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="500"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.62" />
+
+    <TextView
+        android:id="@+id/tw_humedad_6_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="600"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.76" />
+
+    <TextView
+        android:id="@+id/tw_humedad_7_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="700"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <TextView
+        android:id="@+id/tw_humedad_promedio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_humedad_promedio"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.04" />
+
+    <TextView
+        android:id="@+id/tw_humedad_promedio_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="600"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.028"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.215" />
+
+    <TextView
+        android:id="@+id/tw_temperatura"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_temperatura"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.408" />
+
+    <TextView
+        android:id="@+id/tw_temperatura_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.57" />
+
+    <TextView
+        android:id="@+id/tw_fertilizante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fertilizante"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.725" />
+
+    <TextView
+        android:id="@+id/tw_restante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restante:"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.919" />
+
+    <TextView
+        android:id="@+id/tw_fertilizante_dias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.56"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.919" />
+
+    <TextView
+        android:id="@+id/tw_dias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tw_dias"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintHorizontal_bias="0.866"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosVarios"
+        app:layout_constraintVertical_bias="0.919" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_agua"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="169dp"
+        android:layout_height="22dp"
+        android:max="100"
+        android:progress="42"
+        android:progressTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.066"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintVertical_bias="0.912" />
+
+    <TextView
+        android:id="@+id/tw_nivel_de_agua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="288dp"
+        android:text="@string/tw_nivel_de_agua"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoDatosHumedad"
+        app:layout_constraintVertical_bias="0.051" />
+
+    <TextView
+        android:id="@+id/tw_agua_porcentaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="42%"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.436"
+        app:layout_constraintStart_toStartOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintTop_toTopOf="@+id/imgFondoVerdeClaro"
+        app:layout_constraintVertical_bias="0.851" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
