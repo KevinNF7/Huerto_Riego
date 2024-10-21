@@ -4,9 +4,9 @@
     header('Cache-Control: no-cache, must-revalidate');
     // Detalles de la base de datos
     $servername = "127.0.0.1";
-    $username = "u975775819_Kevin";
-    $password = "Tomates2020!";
-    $dbname = "u975775819_HuertoTomates";
+    $username = "Usuario";
+    $password = "Contraseña";
+    $dbname = "Nombre";
     
     
     $conn = new mysqli($servername,$username,$password,$dbname);
