@@ -16,7 +16,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -126,14 +128,16 @@ public class Configuracion extends AppCompatActivity {
         btn_luz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(luz == 0){
-                    luz = 1;
-                    btn_luz.setBackgroundColor(Color.parseColor(color_on));
-                    enviarDatos();
-                }else{
-                    luz = 0;
-                    btn_luz.setBackgroundColor(Color.parseColor(color_off));
-                    enviarDatos();
+                if(!isHoraDeEncendido(horarioEnc,horarioApg)) {
+                    if (luz == 0) {
+                        luz = 1;
+                        btn_luz.setBackgroundColor(Color.parseColor(color_on));
+                        enviarDatos();
+                    } else {
+                        luz = 0;
+                        btn_luz.setBackgroundColor(Color.parseColor(color_off));
+                        enviarDatos();
+                    }
                 }
             }
         });
@@ -153,6 +157,11 @@ public class Configuracion extends AppCompatActivity {
                     et_horaEncendido.setText(datos.getHorarioEnc());
                     et_horaApagado.setText(datos.getHorarioApg());
                     et_periodo.setText(String.valueOf(datos.getFertilizadoPeriodo()));
+                    horarioApg = datos.getHorarioApg();
+                    horarioEnc = datos.getHorarioEnc();
+
+
+
                     if(datos.getLuz()==0){
                         btn_luz.setBackgroundColor(Color.parseColor(color_off));
                         luz = 0;
@@ -195,5 +204,39 @@ public class Configuracion extends AppCompatActivity {
         });
         fertilizadoRecarga = 0;
         fertilizadoReinicio = 0;
+    }
+    public boolean isHoraDeEncendido(String horaEncendido, String horaApagado) {
+        try {
+            // Formato de la hora (HH:mm)
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+            // Hora actual
+            Calendar currentCalendar = Calendar.getInstance();
+            Date currentDate = currentCalendar.getTime();
+            String currentTimeStr = sdf.format(currentDate);
+            Date currentTime = sdf.parse(currentTimeStr);
+
+            
+            Date encendidoTime = sdf.parse(horaEncendido);
+            Date apagadoTime = sdf.parse(horaApagado);
+
+            // Crear Calendar para las horas de encendido y apagado
+            Calendar encendidoCalendar = Calendar.getInstance();
+            encendidoCalendar.setTime(encendidoTime);
+
+            Calendar apagadoCalendar = Calendar.getInstance();
+            apagadoCalendar.setTime(apagadoTime);
+
+            // Comparar si la hora actual está dentro del rango
+            if (currentTime.after(encendidoTime) && currentTime.before(apagadoTime)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
