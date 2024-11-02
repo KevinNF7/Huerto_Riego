@@ -6,8 +6,8 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 // Configura tus datos Wi-Fi
-const char* ssid = "PESCADITO"; //NOMBRE DEL WIFI
-const char* password = "Pelusa20"; //CONTRASEÑA DEL WIFI
+const char* ssid = "SSDI"; //NOMBRE DEL WIFI
+const char* password = "CONTRASEÑA"; //CONTRASEÑA DEL WIFI
 
 // URL de la API en la base de datos
 String serverUrlControl = "http://historia-del-tiempo.com/tablacontrol.php?random=" + String(random(1000));  // Para evitar almacenamiento en cache
@@ -27,23 +27,23 @@ bool fertilizadoReinicio;
 bool fertilizadoRecarga;
 bool lecturaForzada;
 String horaActual;
+bool luz;
 //Para leer el sensor INA219
 Adafruit_INA219 ina219;
 
 // Variables donde se almacen los valores de los sensores
-float humidity1;
-float humidity2;
-float humidity3;
-float humidity4;
-float humidity5;
-float humidity6;
-float humidity7;
-float power_ina;
-float current_ina;
-float current_acs;
-float water_level;
-float fertilizer;
-float temperature;
+float humedad1;
+float humedad2;
+float humedad3;
+float humedad4;
+float humedad5;
+float humedad6;
+float humedad7;
+float potenciaINA;
+float corrienteINA;
+float nivelDeAgua;
+float fertilizante;
+float temperatura;
 
 // Variables para controlar el tiempo
 unsigned long tableMillis = 0;  
@@ -51,6 +51,7 @@ const long tableInterval = 20000; //20 Segundos
 
 unsigned long electMillis = 0;
 const long electInterval = 1200000; // 20 minutos
+
 void setup() {
   Serial.begin(115200);
   delay(10);
@@ -59,20 +60,17 @@ void setup() {
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    //Serial.print(".");
   }
-  //Serial.println("");
-  //Serial.println("WiFi conectado");
-  timeClient.begin();
-
-  //obtenerDatosTablaControl();
+  
 }
 
 void loop() {
   
   unsigned long currentMillis = millis();
+  
   // Comprueba si ha pasado el intervalo para la actualizacion de parametros
   if (currentMillis - tableMillis >= tableInterval) {
+    
     tableMillis = currentMillis;  // Actualiza el tiempo de referencia
     timeClient.update();  // Actualizar la hora
     horaActual = timeClient.getFormattedTime().substring(0, 5);
@@ -81,77 +79,85 @@ void loop() {
 
   //Comprueba si hubo comunicacion serial para actualizar datos  
   if(Serial.available()){
-    String data_arduino = Serial.readStringUntil('\n');
-    data_arduino.trim();
-    sendDataToServer(data_arduino);
+    String arduinoDatos = Serial.readStringUntil('\n');
+    arduinoDatos.trim();
+    enviarDatosServidor(arduinoDatos);
   }
   //Cada 20 minutos envia datos sobre electricidad
   if(currentMillis - electMillis >= electInterval){
     electMillis = currentMillis;
-    sendDataToServerElect();            
+    enviarDatosServidorElectrico();            
   }  
 }
-void sendDataToServerElect(){
+void enviarDatosServidorElectrico(){
   
-  power_ina = ina219.getPower_mW();
-  current_ina = ina219.getCurrent_mA();
+  potenciaINA = ina219.getPower_mW();
+  corrienteINA = ina219.getCurrent_mA();
   if(WiFi.status() == WL_CONNECTED){
     HTTPClient http;
     WiFiClient wifiClient;
     http.begin(wifiClient,serverUrlSubirDatos);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    String httpRequestData = "humidity1=0&humidity2=0&humidity3=0&humidity4=0&humidity5=0&humidity6=0&humidity7=0&power_ina=" + String(power_ina) + "&current_ina=" + String(current_ina) + "&current_acs=0&water_level=0&fertilizer=0&temperature=0";
-  
-  int httpResponseCode = http.POST(httpRequestData);
-    if (httpResponseCode > 0) {
+    String httpRequestData =  "humedad1=0&humedad2=0&humedad3=0&humedad4=0&humedad5=0&humedad6=0&humedad7=0&potenciaINA=" + String(potenciaINA) + 
+                              "&corrienteINA=" + String(corrienteINA) +  
+                              "&nivelDeAgua=0&fertilizante=0&temperatura=0";
     
-    } else {}
+    int httpResponseCode = http.POST(httpRequestData);
+    if (httpResponseCode > 0) {
+
+    } else {
+
+    }
     http.end();
   }
 
 }
-void sendDataToServer(String data){
+void enviarDatosServidor(String datos){
+  
   if(WiFi.status() == WL_CONNECTED){
     HTTPClient http;
     WiFiClient wifiClient;
     http.begin(wifiClient,serverUrlSubirDatos);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    separar(data);
+    
+    procesarDatos(datos);
 
     if(!ina219.begin()){
-    //Serial.println("No se encontro");
+    //Verificar INA
     }
 
-    power_ina = ina219.getPower_mW();
-    current_ina = ina219.getCurrent_mA();
-    current_acs = 0;
+    potenciaINA = ina219.getPower_mW();
+    corrienteINA = ina219.getCurrent_mA();
 
-    String httpRequestData = "humidity1=" + String(humidity1) + "&humidity2=" + String(humidity2) + "&humidity3=" + String(humidity3) + "&humidity4=" + String(humidity4) + "&humidity5=" + String(humidity5) + "&humidity6=" + String(humidity6) +
-                             "&humidity7=" + String(humidity7) + 
-                             "&power_ina=" + String(power_ina) + "&current_ina=" + String(current_ina) + "&current_acs=" + String(current_acs) + "&water_level=" + String(water_level) + "&fertilizer=" + String(fertilizer) + 
-                             "&temperature=" + String(temperature);
+    String httpRequestData =  "humedad1=" + String(humedad1) + 
+                              "&humedad2=" + String(humedad2) + 
+                              "&humedad3=" + String(humedad3) +  
+                              "&humedad4=" + String(humedad4) + 
+                              "&humedad5=" + String(humedad5) + 
+                              "&humedad6=" + String(humedad6) +
+                              "&humedad7=" + String(humedad7) + 
+                              "&potenciaINA=" + String(potenciaINA) + 
+                              "&corrienteINA=" + String(corrienteINA) +  
+                              "&nivelDeAgua=" + String(nivelDeAgua) + 
+                              "&fertilizante=" + String(fertilizante) + 
+                              "&temperatura=" + String(temperatura);
     int httpResponseCode = http.POST(httpRequestData);
-    if (httpResponseCode > 0) {
-     
-      //String response = http.getString();
-      //Serial.println(response);
-    } else {
-      //Serial.print("Error en la conexión: ");
-      //Serial.println(httpResponseCode);
-    }
+    
     http.end();
   }
 }
 void obtenerDatosTablaControl() {
+  
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     WiFiClient wifiClient;
+    
     // Iniciar la conexión HTTP
     http.begin(wifiClient,serverUrlControl);
     int httpCode = http.GET();
 
     if (httpCode > 0) {  // Si la respuesta es positiva
-      //Serial.println("Conexión HTTP exitosa. Código HTTP: " + String(httpCode));
+    
       String payload = http.getString();
       
       // Parsear el JSON recibido
@@ -159,10 +165,9 @@ void obtenerDatosTablaControl() {
       DeserializationError error = deserializeJson(doc, payload);
       
       if (error) {
-        //Serial.print("Error al deserializar JSON: ");
-        //Serial.println(error.c_str());
         return;
       }
+
       // Asignar valores a las variables
       humedadMin = doc["Humedad_min"].as<int>();
       humedadMax = doc["Humedad_max"].as<int>();
@@ -172,90 +177,87 @@ void obtenerDatosTablaControl() {
       fertilizadoReinicio = doc["Fertilizado_reinicio"].as<bool>();
       fertilizadoRecarga = doc["Fertilizado_recarga"].as<bool>();
       lecturaForzada = doc["Lectura_forzada"].as<bool>();
-
+      luz = doc["Luz"].as<bool>();
       // Enviar datos al Arduino mediante comunicacion serial
-        Serial.print(humedadMin);
-        Serial.print(",");
-        Serial.print(humedadMax);
-        Serial.print(",");
-        Serial.print(horaEncendido);
-        Serial.print(",");
-        Serial.print(horaApagado);
-        Serial.print(",");
-        Serial.print(horaActual);
-        Serial.print(",");
-        Serial.print(fertilizadoPeriodo);
-        Serial.print(",");
-        Serial.print(fertilizadoReinicio);
-        Serial.print(",");
-        Serial.print(fertilizadoRecarga);
-        Serial.print(",");
-        Serial.println(lecturaForzada);
+      Serial.print(humedadMin);
+      Serial.print(",");
+      Serial.print(humedadMax);
+      Serial.print(",");
+      Serial.print(horaEncendido);
+      Serial.print(",");
+      Serial.print(horaApagado);
+      Serial.print(",");
+      Serial.print(horaActual);
+      Serial.print(",");
+      Serial.print(fertilizadoPeriodo);
+      Serial.print(",");
+      Serial.print(fertilizadoReinicio);
+      Serial.print(",");
+      Serial.print(fertilizadoRecarga);
+      Serial.print(",");
+      Serial.print(lecturaForzada);
+      Serial.print(",");
+      Serial.println(luz);
 
     } else {
-      //Serial.println("Error en la solicitud HTTP");
-    }
+      //Error en la solicitud HTTP
+      }
 
     http.end();  // Finalizar la conexión HTTP
-  } else {
-    //Serial.println("WiFi no conectado");
+  
   }
 }
 
-void separar(String texto) {
+void procesarDatos(String texto) {
   // Encontrar las comas y extraer los números
   int startIndex = 0;
   int commaIndex = texto.indexOf(',');
 
   // Almacenar el primer número
-  humidity1 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad1 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  humidity2 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad2 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  humidity3 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad3 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  humidity4 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad4 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  humidity5 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad5 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  humidity6 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad6 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  humidity7 = texto.substring(startIndex, commaIndex).toFloat();
+  humedad7 = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
   
-  power_ina = texto.substring(startIndex, commaIndex).toFloat();
+  potenciaINA = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  current_ina = texto.substring(startIndex, commaIndex).toFloat();
+  corrienteINA = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  current_acs = texto.substring(startIndex, commaIndex).toFloat();
+  nivelDeAgua = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
-  water_level = texto.substring(startIndex, commaIndex).toFloat();
-  startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
-
-  fertilizer = texto.substring(startIndex, commaIndex).toFloat();
+  fertilizante = texto.substring(startIndex, commaIndex).toFloat();
   startIndex = commaIndex + 1;
   commaIndex = texto.indexOf(',', startIndex);
 
   // Almacenar el ultimo numero
-  temperature = texto.substring(startIndex).toFloat();
+  temperatura = texto.substring(startIndex).toFloat();
 }
