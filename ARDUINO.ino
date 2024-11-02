@@ -4,87 +4,97 @@
 
 Adafruit_INA219 ina219;
 // Pines del relay y sensores
-const int relay1Pin = 2; //Sensores
-const int relay2Pin = 3; //Solenoide Riego
-const int relay3Pin = 4; //Solenoide Fertilizado
-const int relay4Pin = 5; //Fertilizado Mezcla
-const int relay5Pin = 6; //Fertilizado Bomba
-const int relay6Pin = 7; //Luz
-const int water_triggerPin = 8; //Nivel de agua
-const int water_echoPin = 9; //Nivel de agua
+const int relayPin1 = 2; //Sensores
+const int relayPin2 = 3; //Solenoide Riego
+const int relayPin3 = 4; //Solenoide Fertilizado
+const int relayPin4 = 5; //Fertilizado Mezcla
+const int relayPin5 = 6; //Fertilizado Bomba
+const int relayPin6 = 7; //Luz
 
-const int servoPin = 11; //Servomotor fertilizado
-int targetAngle = 32;
-int currentAngle = 0;
+const int aguaTriggerPin = 8; //Nivel de agua
+const int aguaEchoPin = 9; //Nivel de agua
 
-const int humiditySensorPin1 = A0;
-const int humiditySensorPin2 = A1;
-const int humiditySensorPin3 = A2;
-const int humiditySensorPin4 = A3;
-const int humiditySensorPin5 = A4;
-const int humiditySensorPin6 = A5;
-const int humiditySensorPin7 = A6;
+
+//Variables para la dosificacion
+Servo myServo;
+const int servoPin = 9;
+ 
+int anguloObjetivo = 32;
+int anguloActual = 0;
+
+//PINS de los sensores
+const int humedadSensorPin1 = A0;
+const int humedadSensorPin2 = A1;
+const int humedadSensorPin3 = A2;
+const int humedadSensorPin4 = A3;
+const int humedadSensorPin5 = A4;
+const int humedadSensorPin6 = A5;
+const int humedadSensorPin7 = A6;
 const int lm35SensorPin = A7;
 
+//Variables de control
+int controlHumedadMin = 0;
+int controlHumedadMax = 0;
+String controlHoraEncendido = "";
+String controlHoraApagado = "";
+int controlFertilizadoPeriodo = 0;
+int controlFertilizadoReinicio = 0;
+int controlFertilizadoRecarga = 0;
+int controlLecturaForzada = 0;
+String controlHoraActual = "";
+int controlLuz = 0;
 
-float t_humedadMin = 0;
-float t_humedadMax = 0;
-String t_horaEncendido = "";
-String t_horaApagado = "";
-float t_fertilizadoPeriodo = 0;
-String t_fertilizadoReinicio = "";
-String t_fertilizadoRecarga = "";
-String t_lecturaForzada = "";
-String t_horaActual = "";
-
-float humidity_sensor1 = 0;
-float humidity_sensor2 = 0;
-float humidity_sensor3 = 0;
-float humidity_sensor4 = 0;
-float humidity_sensor5 = 0;
-float humidity_sensor6 = 0;
-float humidity_sensor7 = 0;
-float humidity_average = 0;
-float current_ina = 0;
-float power_ina = 0;
+//Variables de lectura de los sensores
+float humedadSensor1 = 0;
+float humedadSensor2 = 0;
+float humedadSensor3 = 0;
+float humedadSensor4 = 0;
+float humedadSensor5 = 0;
+float humedadSensor6 = 0;
+float humedadSensor7 = 0;
+float humedadPromedio = 0;
+float corrienteINA = 0;
+float potenciaINA = 0;
 float current_acs = 0;
-float water_level = 0;
-float fertilizer = 0;
-float temperature = 0;
+float nivelDeAgua = 0;
+float fertilizante = 0;
+float temperatura = 0;
 
 
-Servo myServo;
-const int pinServo = 9;
+float humedadMinima = 716;
+float humedadMaxima = 380;
+float fertilizantePeriodo = 100;
 
-
-float min_humidity = 716;
-float max_humidity = 380;
-int fertilizer_days;
+//Variables para controlar el tiempo
 unsigned long previousMillis = 0;  // Almacena el tiempo en que se activó la última acción
-unsigned long interval = 1800000; // Intervalo de 30 minutos en ms
+unsigned long releOnMillis = 0;
+unsigned long releOffMillis = 0;
+
+
+bool pruebaDeEncendido = true;
+
+
+
+unsigned long intervaloDeMedicion = 15000; // Intervalo de 30 minutos en ms
 
 unsigned long servoMillis = 0;
 unsigned long gearMillis = 0;
 unsigned long pumpMillis = 0;
 unsigned long manualPreviousMillis = 0; // Almacena el tiempo para la medición manual
-bool needManualReading = false;
 
-unsigned long releOnMillis = 0;
-unsigned long releOffMillis = 0;
-bool irrigationActive = false;
-unsigned long riegoStartMillis = 0;
-const long INAinterval = 900000;
-unsigned long previousINA = 0;
-bool initial = true;
-bool needServo = false;
-//long initial_interval = 10000;
-bool needFertilizer = false;
-int fertilizerPeriod = 100;
-int daysCount = 0;
-bool fertilizerSetting = false;
+bool isLecturaForzada = false;
+bool isRiegoActivo = false;
+bool isNecesarioServo = false;
+bool isNecesitaFertilizante = false;
+bool isFertilizadoEnConfiguracion = false;
+
+
+int contadorDias = 0;
+
 const unsigned long fertilizerInterval = 1209600000; // 14 días en milisegundos
 unsigned long fertilizerPrevious = 0;  // Tiempo en que se inicia el intervalo
 const unsigned long dayDuration = 86400000;
+
 enum State {
   WAITING,
   RELAY_ON,
@@ -99,122 +109,133 @@ State currentState = WAITING;
 
 void setup() {
   Serial.begin(115200);
-  pinMode(relay1Pin, OUTPUT); // Configura el pin del relé como salida
-  pinMode(relay2Pin, OUTPUT);
-  pinMode(relay3Pin, OUTPUT);
-  pinMode(relay4Pin, OUTPUT);
-  pinMode(relay5Pin, OUTPUT);
-  pinMode(relay6Pin, OUTPUT);
+
+  pinMode(relayPin1, OUTPUT); 
+  pinMode(relayPin2, OUTPUT);
+  pinMode(relayPin3, OUTPUT);
+  pinMode(relayPin4, OUTPUT);
+  pinMode(relayPin5, OUTPUT);
+  pinMode(relayPin6, OUTPUT);
  
-  digitalWrite(relay1Pin, HIGH);
-  digitalWrite(relay2Pin, HIGH);
-  digitalWrite(relay3Pin, HIGH);
-  digitalWrite(relay4Pin, HIGH);
-  digitalWrite(relay5Pin, HIGH);
-  digitalWrite(relay6Pin, HIGH);
-  pinMode(water_triggerPin, OUTPUT);
-  pinMode(water_echoPin, INPUT);
-  myServo.attach(pinServo);
+  digitalWrite(relayPin1, HIGH);
+  digitalWrite(relayPin2, HIGH);
+  digitalWrite(relayPin3, HIGH);
+  digitalWrite(relayPin4, HIGH);
+  digitalWrite(relayPin5, HIGH);
+  digitalWrite(relayPin6, HIGH);
+  
+  pinMode(aguaTriggerPin, OUTPUT);
+  pinMode(aguaEchoPin, INPUT);
+  myServo.attach(servoPin);
   myServo.write(0);
   fertilizerPrevious = 0;
 }
 
 
 void loop() {
+  
   unsigned long currentMillis = millis();  // Obtiene el tiempo actual
 
-  if(currentMillis - fertilizerPrevious >= dayDuration || !needFertilizer){
-    daysCount++;
+  //Fertilizado
+  if(currentMillis - fertilizerPrevious >= dayDuration || !isNecesitaFertilizante){
+    contadorDias++;
     fertilizerPrevious = currentMillis;
-    if(daysCount >= fertilizerPeriod){
-      needFertilizer = true;
-      daysCount = 0;
+    if(contadorDias >= fertilizantePeriodo){
+      isNecesitaFertilizante = true;
+      contadorDias = 0;
     }
   }
   
+  //Recibir datos de control del NodeMCU
   if(Serial.available()){
-    String message = Serial.readStringUntil('\n');
-    separar(message);
-    Serial.print(message);
-    actualizar_datos();
-    if(comparar_horas(t_horaEncendido,t_horaActual)){
-      digitalWrite(relay6Pin,LOW);
-    }
-    if(comparar_horas(t_horaApagado, t_horaActual) || comparar_horas(t_horaActual,t_horaEncendido)){
-      digitalWrite(relay6Pin,HIGH);
-    }
+    
+    String datosControl = Serial.readStringUntil('\n');
+    actualizarDatos(datosControl); //Actualizar
+    
+    
   }
   
   switch (currentState) {
     case WAITING:
       
-      if (currentMillis - previousMillis >= interval || needManualReading ) {
+      if (currentMillis - previousMillis >= intervaloDeMedicion) {
         // Ha pasado el intervalo
+        digitalWrite(relayPin1, LOW);  // Enciende el relé
         previousMillis = currentMillis;
-        digitalWrite(relay1Pin, LOW);  // Enciende el relé
         currentState = RELAY_ON;
         releOnMillis = currentMillis;
         
       }
-      if(needManualReading){
+      if(isLecturaForzada){
+        //Lectura forzada
+        digitalWrite(relayPin1, LOW); // Enciende el relé
         currentState = RELAY_ON;
         releOnMillis = currentMillis;
-        needManualReading = false;
+        isLecturaForzada = false;
       }
       break;
 
 
     case RELAY_ON:
        //Actualizar el tiempo de intervalo
-      if(initial){
-        interval = 1800000; //30 minutos en ms
-        initial = false;
+      if(pruebaDeEncendido){
+        intervaloDeMedicion = 1800000; //30 minutos en ms
+        pruebaDeEncendido = false;
       }
       if (currentMillis - releOnMillis >= 1000) {
         // Espera 1 segundo después de encender el relé
-        humidity_sensor1 = analogRead(humiditySensorPin1);
-        humidity_sensor2 = analogRead(humiditySensorPin2);
-        humidity_sensor3 = analogRead(humiditySensorPin3);
-        humidity_sensor4 = analogRead(humiditySensorPin4);
-        humidity_sensor5 = analogRead(humiditySensorPin5);
-        humidity_sensor6 = analogRead(humiditySensorPin6);
-        humidity_sensor7 = analogRead(humiditySensorPin7);
-        humidity_average = (humidity_sensor1 + humidity_sensor2 + humidity_sensor3 +
-                            humidity_sensor4 + humidity_sensor5 + humidity_sensor6 + humidity_sensor7)/7;
-        water_level = getWaterLevel();
-        current_acs = 0;
-
+        humedadSensor1 = analogRead(humedadSensorPin1);
+        humedadSensor2 = analogRead(humedadSensorPin2);
+        humedadSensor3 = analogRead(humedadSensorPin3);
+        humedadSensor4 = analogRead(humedadSensorPin4);
+        humedadSensor5 = analogRead(humedadSensorPin5);
+        humedadSensor6 = analogRead(humedadSensorPin6);
+        humedadSensor7 = analogRead(humedadSensorPin7);
+        humedadPromedio = (humedadSensor1 + humedadSensor2 + humedadSensor3 +
+                            humedadSensor4 + humedadSensor5 + humedadSensor6 + humedadSensor7)/7;
+        
+        
+        nivelDeAgua = obtenerDatosAgua();
 
         if(!ina219.begin()){
-        //Serial.println("No se encontro");
+        //Verifica si esta activo
         }
-        current_ina = ina219.getCurrent_mA();
-        power_ina = ina219.getPower_mW();
-        
-        temperature = getTemperature();
+        corrienteINA = ina219.getCurrent_mA();
+        potenciaINA = ina219.getPower_mW();
+        temperatura = obtenerTemperatura();
 
 
-        String output = String(humidity_sensor1) + "," + String(humidity_sensor2)+ "," + String(humidity_sensor3)+ "," + String(humidity_sensor4) + "," + String(humidity_sensor5) + "," + String(humidity_sensor6) + "," + String(humidity_sensor7) + ","
-                  + String(power_ina) + ","+ String(current_ina) + "," +String(current_acs) + "," + String(water_level) + "," + String(fertilizer) + "," + String(temperature);
+        String output = String(humedadSensor1) + "," + 
+                        String(humedadSensor2) + "," + 
+                        String(humedadSensor3) + "," + 
+                        String(humedadSensor4) + "," + 
+                        String(humedadSensor5) + "," + 
+                        String(humedadSensor6) + "," + 
+                        String(humedadSensor7) + "," + 
+                        String(potenciaINA) + ","+ 
+                        String(corrienteINA) + "," +
+                        String(nivelDeAgua) + "," + 
+                        String(fertilizante) + "," + 
+                        String(temperatura);
+                        
         Serial.println(output);
-       
-        fertilizer = 0;
-        if(humidity_average >= min_humidity && !irrigationActive){
-         // min_humidity = 818;
-          //Inicia el Riego
-          if(!needFertilizer ){
-            digitalWrite(relay2Pin, LOW);
-            irrigationActive = true;
-            interval = 30000; //30Segundos
-          }
+        fertilizante = 0;
+
+        if(humedadPromedio >= humedadMinima && !isRiegoActivo){
           
+          if(!isNecesitaFertilizante){
+            digitalWrite(relayPin2, LOW); //Inicia el riego
+            intervaloDeMedicion = 30000; // 30 Segundos
+            isRiegoActivo = true;
+          
+          }
         }
-        if(humidity_average <= max_humidity && irrigationActive){
-          //max_humidity = 460;
+        
+        if(humedadPromedio <= humedadMaxima && isRiegoActivo){
           //Detener el riego
-          digitalWrite(relay2Pin, HIGH);
-          irrigationActive = false;
-          interval = 1800000; //30 minutos
+          digitalWrite(relayPin2, HIGH);
+          isRiegoActivo = false;
+          intervaloDeMedicion = 1800000; //30 minutos
           
         }
         releOffMillis = currentMillis;
@@ -227,16 +248,21 @@ void loop() {
       
       if (currentMillis - releOffMillis >= 1000) {
         // Espera 1 segundo después de leer el sensor
-        digitalWrite(relay1Pin,HIGH);   // Apaga el relé
-        if(!needFertilizer){
+        digitalWrite(relayPin1, HIGH);   // Apaga el relé
+        
+        //Si no necesita fertilizado
+        if(!isNecesitaFertilizante){
           currentState = WAITING;
         }else{
-          if(!fertilizerSetting){
+          //Si necesita fertilizante
+          if(!isFertilizadoEnConfiguracion){
             gearMillis = currentMillis;
             servoMillis = currentMillis;
             currentState = FERTILIZER_DOSE;
+            isNecesarioServo = true;
           }else{
             currentState = WAITING;
+            intervaloDeMedicion = 300000;
           }
         }
       }
@@ -245,43 +271,48 @@ void loop() {
 
     
     case FERTILIZER_DOSE:
-      digitalWrite(relay4Pin,LOW);
-      //El servo se momera 1 grado cada 1 segundos
-      if (currentMillis - servoMillis >= 1000 && currentAngle <= targetAngle && needServo) {
+
+      digitalWrite(relayPin4,LOW);//Energiza el motorreductor
+      //El servo se movera 1 grado cada 1 segundos
+      if (currentMillis - servoMillis >= 1000 && anguloActual <= anguloObjetivo && isNecesarioServo) {
         servoMillis = currentMillis;
-        currentAngle++;  // Incrementar el ángulo en 1 grado
-        myServo.write(currentAngle);
-        if (currentAngle >= targetAngle) {
-          if(currentAngle >= 128){
-            currentAngle = 0;
+        anguloActual++;  // Incrementar el ángulo en 1 grado
+        myServo.write(anguloActual);
+        if (anguloActual >= anguloObjetivo) {
+          //Si ha llegado al maximoo
+          if(anguloActual >= 128){
             
-            myServo.write(currentAngle);
-            needServo = false;
+            anguloActual = 0;
+            myServo.write(anguloActual);
+            isNecesarioServo = false;
+          
           }else{
-            targetAngle += 32;
-            needServo = false;
+          
+            anguloObjetivo += 32;
+            isNecesarioServo = false;
+          
           }
         }
       }
+      //Motorreducto ha estado encendido por 90 segundos
       if(currentMillis - gearMillis >= 90000){
         
         pumpMillis = currentMillis;
-        digitalWrite(relay4Pin, HIGH);
-        digitalWrite(relay3Pin, LOW);
-        digitalWrite(relay5Pin, LOW);
+        digitalWrite(relayPin4, HIGH); //Apaga el motorreductor
+        digitalWrite(relayPin3, LOW); //Abre la solenoide
+        digitalWrite(relayPin5, LOW); //Enciende las bombas
         currentState = FERTILIZER_PUMP;
       }
-      
-      
+            
       break;
 
     case FERTILIZER_PUMP:
-      
+      //Espera 120 segundos
       if(currentMillis - pumpMillis >= 120000){
-        digitalWrite(relay5Pin, HIGH);
-        digitalWrite(relay3Pin, HIGH);
+        digitalWrite(relayPin5, HIGH); //Apaga las bombas
+        digitalWrite(relayPin3, HIGH); //Cierra la solenoide
         currentState = WAITING;
-        fertilizer = 180;
+        fertilizante = 180;
       }
 
       break;
@@ -290,110 +321,127 @@ void loop() {
 
 }  
 
-float getTemperature(){
-  int value = analogRead(lm35SensorPin);
-  float volts = (value*5) / 1024.0;
-  float celsius = (volts * 100) - 32;
+float obtenerTemperatura(){
+  int valor = analogRead(lm35SensorPin);
+  float voltios = (valor*5) / 1024.0;
+  float celsius = (voltios * 100) - 32;
   return celsius;
 }
 
 
-float getWaterLevel(){
+float obtenerDatosAgua(){
+  
   float duration;
-  digitalWrite(water_triggerPin, LOW);
+  digitalWrite(aguaTriggerPin, LOW);
   delayMicroseconds(2);
 
-
-  digitalWrite(water_triggerPin, HIGH);
+  digitalWrite(aguaTriggerPin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(water_triggerPin, LOW);
+  digitalWrite(aguaTriggerPin, LOW);
+  duration = pulseIn(aguaEchoPin,HIGH);
 
-
-  duration = pulseIn(water_echoPin,HIGH);
   return duration;
 }
-void separar(String texto){
-  // Encontrar las comas y extraer los números
+
+
+bool isRangoDeEncendido(String encendido, String apagado, String actual){
+  //Formato de la hora HH:MM
+  int encendidoHora = encendido.substring(0,2).toInt();
+  int encendidoMinutos = encendido.substring(3,5).toInt();
+  
+  int apagadoHora = apagado.substring(0,2).toInt();
+  int apagadoMinutos = apagado.substring(3,5).toInt();
+  
+  int actualHora = actual.substring(0,2).toInt();
+  int actualMinutos = actual.substring(3,5).toInt();
+
+  int encendidoMinutosTotales = encendidoHora * 60 + encendidoMinutos;
+  int apagadoMinutosTotales = apagadoHora * 60 + apagadoMinutos;
+  int actualMinutosTotales = actualHora * 60 + actualMinutos;
+
+  if(actualMinutosTotales >= encendidoMinutosTotales && actualMinutosTotales <= apagadoMinutosTotales){
+    return true;
+  }else { return false;}
+
+}
+
+void actualizarDatos(String datosControl){
+
   int startIndex = 0;
-  int commaIndex = texto.indexOf(',');
+  int commaIndex = datosControl.indexOf(',');
 
   // Almacenar el primer número
-  t_humedadMin = texto.substring(startIndex, commaIndex).toInt();
+  controlHumedadMin = datosControl.substring(startIndex, commaIndex).toInt();
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
-  t_humedadMax = texto.substring(startIndex, commaIndex).toInt();
+  controlHumedadMax = datosControl.substring(startIndex, commaIndex).toInt();
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
-  t_horaEncendido = texto.substring(startIndex, commaIndex);
+  controlHoraEncendido = datosControl.substring(startIndex, commaIndex);
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
-  t_horaApagado = texto.substring(startIndex, commaIndex);
+  controlHoraApagado = datosControl.substring(startIndex, commaIndex);
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
-  t_horaActual = texto.substring(startIndex, commaIndex);
+  controlHoraActual = datosControl.substring(startIndex, commaIndex);
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
-  t_fertilizadoPeriodo = texto.substring(startIndex, commaIndex).toInt();
+  controlFertilizadoPeriodo = datosControl.substring(startIndex, commaIndex).toInt();
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
-  t_fertilizadoReinicio = (texto.substring(startIndex, commaIndex));
+  controlFertilizadoReinicio = (datosControl.substring(startIndex, commaIndex)).toInt();
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
   
-  t_fertilizadoRecarga = (texto.substring(startIndex, commaIndex));
+  controlFertilizadoRecarga = (datosControl.substring(startIndex, commaIndex)).toInt();
   startIndex = commaIndex + 1;
-  commaIndex = texto.indexOf(',', startIndex);
+  commaIndex = datosControl.indexOf(',', startIndex);
 
+  controlLecturaForzada = (datosControl.substring(startIndex, commaIndex)).toInt();
+  startIndex = commaIndex + 1;
+  commaIndex = datosControl.indexOf(',',startIndex);
   // Almacenar el ultimo numero
-  t_lecturaForzada = (texto.substring(startIndex));
-}
-
-boolean comparar_horas(String recibida, String actual){
-
-  //Formato HH:MM
-  int actualHora = actual.substring(0, 2).toInt();
-  int actualMinutos = actual.substring(3, 5).toInt();
+  controlLuz = (datosControl.substring(startIndex)).toInt();  
   
-  //FORMATO HH:MM:SS
-  int recibidaHora = recibida.substring(0, 2).toInt();
-  int recibidaMinutos = recibida.substring(3, 5).toInt();
 
-  // Compara horas y minutos
-  if (actualHora > recibidaHora) {
-    return true;
-  } else if (actualHora == recibidaHora && actualMinutos >= recibidaMinutos) {
-    return true;
+  humedadMinima = controlHumedadMin;
+  humedadMaxima = controlHumedadMax;
+
+  fertilizantePeriodo = controlFertilizadoPeriodo;
+  //Serial.println("Fertilizado reinicio= " + t_fertilizadoReinicio + " FertilizadoRecarga = " + t_fertilizadoRecarga + " LecturaForzada = " + t_lecturaForzada);
+  
+  if(isRangoDeEncendido(controlHoraEncendido, controlHoraApagado, controlHoraActual) || controlLuz == 1){
+    digitalWrite(relayPin6, LOW);
+  }else{
+    digitalWrite(relayPin6, HIGH);
   }
-  return false;
-}
-  
-void actualizar_datos(){
-  min_humidity = t_humedadMin;
-  max_humidity = t_humedadMax;
-  //Serial.print(comparar_horas(t_horaEncendido,t_horaActual));
-  //Serial.print(comparar_horas(t_horaApagado,t_horaActual));
-  fertilizer_days = t_fertilizadoPeriodo;
-  
-  Serial.println("Fertilizado reinicio= " + t_fertilizadoReinicio + " FertilizadoRecarga = " + t_fertilizadoRecarga + " LecturaForzada = " + t_lecturaForzada);
-  if(t_lecturaForzada == "1"){
-    needManualReading = true;
+  if(controlLuz == 0){
+    digitalWrite(relayPin6, HIGH);
   }
-  if(t_fertilizadoReinicio == "1" || t_fertilizadoRecarga == "1"){
-    fertilizerSetting = true;
-    if(t_fertilizadoRecarga == "1"){
-      currentAngle = 128;
-      myServo.write(currentAngle);  
+
+  if(controlLecturaForzada == 1){
+    isLecturaForzada = true;
+  }
+
+  if(controlFertilizadoReinicio == 1 || controlFertilizadoRecarga == 1){
+    isFertilizadoEnConfiguracion = true;
+
+    if(controlFertilizadoRecarga == 1){
+      anguloActual = 128;
+      myServo.write(anguloActual);  
     }
-    if(t_fertilizadoReinicio== "1"){
-      currentAngle = 0;
-      myServo.write(currentAngle);
-      fertilizerSetting = false;
+    if(controlFertilizadoReinicio== 1){
+      anguloActual = 0;
+      myServo.write(anguloActual);
+      isFertilizadoEnConfiguracion = false;
     }
   }
+  
+}
 }
