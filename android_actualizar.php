@@ -5,8 +5,8 @@
     // Detalles de la base de datos
     date_default_timezone_set('America/Lima');
     $servername = "127.0.0.1";
-    $username = "u975775819_Kevin";
-    $password = "Tomates2020!";
+    $username = "Usuario";
+    $password = "Contraseña";
     $dbname = "u975775819_HuertoTomates";
     
     $data = array();
