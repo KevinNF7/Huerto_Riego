@@ -1,11 +1,11 @@
 <?php
 // Verificar si hay una solicitud POST con el parámetro 'control_id' (podrías cambiar 'control_id' si no es necesario)
     header('Cache-Control: no-cache, must-revalidate');
-    // Detalles de la base de datos
+    // Datos de la base de datos
     $dbHost     = "127.0.0.1";
-    $dbUsername = "u975775819_Kevin";       // Cambiar por tu usuario de la base de datos
-    $dbPassword = "Tomates2020!";      // Cambiar por tu contraseña
-    $dbName     = "u975775819_HuertoTomates";  // Cambiar por el nombre de tu base de datos
+    $dbUsername = "Usuario";       
+    $dbPassword = "Contraseña";      
+    $dbName     = "u975775819_HuertoTomates";  
     
     $data = array();
     // Crear la conexión y seleccionar la base de datos
