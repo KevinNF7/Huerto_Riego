@@ -137,7 +137,7 @@ void loop() {
   unsigned long currentMillis = millis();  // Obtiene el tiempo actual
 
   //Fertilizado
-  if(currentMillis - fertilizerPrevious >= dayDuration || !isNecesitaFertilizante){
+  if(currentMillis - fertilizerPrevious >= dayDuration && !isNecesitaFertilizante){
     contadorDias++;
     fertilizerPrevious = currentMillis;
     if(contadorDias >= fertilizantePeriodo){
