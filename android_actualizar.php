@@ -26,7 +26,7 @@
     
    
     // Realizar la consulta para obtener los datos de 'Tabla_Control'
-    $query = $conn->query("SELECT Humedad1, Humedad2, Humedad3, Humedad4, Humedad5, Humedad6, Humedad7, NivelDeAgua, Temperatura FROM Datos_20240910 ORDER BY idKey DESC LIMIT 1");
+    $query = $conn->query("SELECT Humedad1, Humedad2, Humedad3, Humedad4, Humedad5, Humedad6, Humedad7, NivelDeAgua, Temperatura FROM $nombre_tabla ORDER BY idKey DESC LIMIT 1");
     
     // Verificar si se encontró al menos una fila
     if ($query->num_rows > 0) {
